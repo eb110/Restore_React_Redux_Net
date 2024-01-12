@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { Product } from "../../app/models/types";
 import { convertPriceToPounds } from "../../utils/utils";
+import { Link } from "react-router-dom";
 
 interface ProductCardProps {
   product: Product;
@@ -41,7 +42,7 @@ export const ProductCard = ({ product }: ProductCardProps): React.ReactNode => {
         </CardContent>
         <CardActions>
           <Button size="small">Add to cart</Button>
-          <Button size="small">View</Button>
+          <Button size="small" component={Link} to={`/catalog/${product.id}`}>View</Button>
         </CardActions>
       </Card>
     </>

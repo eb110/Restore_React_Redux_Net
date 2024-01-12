@@ -7,6 +7,7 @@ import {
   ThemeProvider,
   createTheme,
 } from "@mui/material";
+import { Outlet } from "react-router-dom";
 
 function App(): React.ReactNode {
   const [darkMode, setDarkMode] = useState<boolean>(false);
@@ -29,7 +30,7 @@ function App(): React.ReactNode {
       <CssBaseline />
       <Header handleDarkMode={handleDarkMode} switchState={darkMode} />
       <Container>
-        <Catalog />
+        <Outlet />
       </Container>
     </ThemeProvider>
   );

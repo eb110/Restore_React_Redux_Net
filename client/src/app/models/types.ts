@@ -9,3 +9,10 @@ export interface Product{
     quantityInStock: number
 }
 export type Products = Product[]
+
+export interface RoutePath{
+    title: string;
+    path: string;
+}
+
+export type RoutePaths = RoutePath[]
