@@ -16,3 +16,18 @@ export interface RoutePath{
 }
 
 export type RoutePaths = RoutePath[]
+
+export interface errorResponse{
+    data: errorData;
+    status: number;
+}
+
+export interface errorData{
+    title: string;
+    detail: string;
+    status: number;
+}
+
+export interface locationError{
+    error: errorData
+}
