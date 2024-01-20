@@ -10,8 +10,9 @@ import {
   Typography,
 } from "@mui/material";
 import { RoutePaths } from "../models/types";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { ShoppingCart } from "@mui/icons-material";
+import { useStoreContext } from "../context/StoreContext";
 
 const midLinks: RoutePaths = [
   { title: "catalog", path: "/catalog" },
@@ -37,10 +38,9 @@ interface HeaderProps {
   switchState: boolean;
 }
 
-export const Header = ({
-  handleDarkMode,
-  switchState,
-}: HeaderProps): React.ReactNode => {
+export const Header = ({handleDarkMode, switchState,}: HeaderProps): React.ReactNode => {
+  const itemCount = useStoreContext()!.basketCount;
+
   return (
     <>
       <AppBar position="static" sx={{ mb: 4 }}>
@@ -51,7 +51,7 @@ export const Header = ({
             alignItems: "center",
           }}
         >
-          <Box display='flex' alignItems='center'>
+          <Box display="flex" alignItems="center">
             <Typography
               variant="h6"
               component={NavLink}
@@ -79,14 +79,16 @@ export const Header = ({
             </List>
           </Box>
 
-          <Box display='flex'>
+          <Box display="flex">
             <IconButton
+              component={Link}
+              to="/basket"
               size="large"
               edge="start"
               color="inherit"
               sx={{ mr: 2 }}
             >
-              <Badge badgeContent="4" color="secondary">
+              <Badge badgeContent={itemCount()} color="secondary">
                 <ShoppingCart />
               </Badge>
             </IconButton>

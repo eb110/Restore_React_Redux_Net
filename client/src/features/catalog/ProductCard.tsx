@@ -8,15 +8,31 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
+import { LoadingButton } from '@mui/lab';
 import { Product } from "../../app/models/types";
 import { convertPriceToPounds } from "../../utils/utils";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import agent from "../../api/agent";
+import { useStoreContext } from "../../app/context/StoreContext";
 
 interface ProductCardProps {
   product: Product;
 }
 
 export const ProductCard = ({ product }: ProductCardProps): React.ReactNode => {
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const setBasket = useStoreContext()!.setBasket;
+
+  const handleAddItem = (): void => {
+    setLoading(true);
+    void agent.Basket.addItem(product.id)
+    .then(basket => setBasket(basket))
+    .catch(error => console.log(error))
+    .finally(() => setLoading(false));
+  }
+
   return (
     <>
       <Card>
@@ -41,7 +57,7 @@ export const ProductCard = ({ product }: ProductCardProps): React.ReactNode => {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small">Add to cart</Button>
+          <LoadingButton loading={loading} size="small" onClick={handleAddItem}>Add to cart</LoadingButton>
           <Button size="small" component={Link} to={`/catalog/${product.id}`}>View</Button>
         </CardActions>
       </Card>

@@ -7,6 +7,8 @@ import { ProductDetails } from "../../features/catalog/ProductDetails";
 import { Catalog } from "../../features/catalog/Catalog";
 import { ServerError } from "../errors/ServerError";
 import { NotFound } from "../errors/NotFound";
+import { BasketPage } from "../../features/basket/BasketPage";
+import { CheckoutPage } from "../../features/checkout/CheckoutPage";
 
 export const router = createBrowserRouter([
     {
@@ -18,6 +20,8 @@ export const router = createBrowserRouter([
             {path: 'contact', element: <ContactPage />},
             {path: 'catalog/:id', element: <ProductDetails />},
             {path: 'catalog', element: <Catalog />},
+            {path: 'basket', element: <BasketPage />},
+            {path: 'checkout', element: <CheckoutPage />},
             {path: 'server-error', element: <ServerError />},
             {path: 'not-found', element: <NotFound />},
             {path: '*', element: <NotFound />},

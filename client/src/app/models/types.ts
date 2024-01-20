@@ -10,6 +10,22 @@ export interface Product{
 }
 export type Products = Product[]
 
+export interface Basket {
+    id: number
+    buyerId: string
+    items: BasketItem[]
+  }
+  
+  export interface BasketItem {
+    productId: number
+    name: string
+    price: number
+    pictureUrl: string
+    type: string
+    brand: string
+    quantity: number
+  }
+
 export interface RoutePath{
     title: string;
     path: string;
@@ -30,4 +46,10 @@ export interface errorData{
 
 export interface locationError{
     error: errorData
+}
+
+export interface LoadingButtonState{
+    state: boolean;
+    id: number;
+    type: string
 }

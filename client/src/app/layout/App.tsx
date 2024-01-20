@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Header } from "./Header";
 import {
   Container,
@@ -9,8 +9,29 @@ import {
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
+import { useStoreContext } from "../context/StoreContext";
+import { getCookie } from "../../utils/utils";
+import agent from "../../api/agent";
+import { LoadingComponent } from "./LoadingComponent";
 
 function App(): React.ReactNode {
+  const setBasket = useStoreContext()?.setBasket;
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const buyerId = getCookie('buyerId');
+
+    //fetch basket only if cookie exist
+    //as this proves the existendce of basket itself
+    if(buyerId){
+      void agent.Basket.basket()
+      .then(basket => setBasket!(basket))
+      .catch(error => console.log(error))
+    }
+    setLoading(false)
+  }, [setBasket])
+
+
   const [darkMode, setDarkMode] = useState<boolean>(false);
 
   const handleDarkMode = (): void => {
@@ -25,6 +46,8 @@ function App(): React.ReactNode {
       },
     },
   });
+
+  if (loading) return <LoadingComponent message="initialising app..." />;
 
   return (
     <ThemeProvider theme={theme}>
