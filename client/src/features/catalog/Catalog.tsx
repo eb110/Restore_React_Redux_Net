@@ -1,22 +1,23 @@
-import agent from "../../api/agent";
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { LoadingComponent } from "../../app/layout/LoadingComponent";
-import { Products } from "../../app/models/types";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { ProductList } from "./ProductList";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { fetchProductsAsync, productSelectors } from "./catalogSlice";
 
 export const Catalog = (): React.ReactNode => {
 
-  const [products, setProducts] = useState<Products>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const products = useAppSelector(productSelectors.selectAll);
+  const dispatch = useAppDispatch();
+  const {productsLoaded, status} = useAppSelector(state => state.catalog);
+
 
   useEffect(() => {
-    void agent.Catalog.list()
-    .then(products => setProducts(products))
-    .catch(error => console.log(error))
-    .finally(() => setLoading(false));
-  }, []);
+    if(!productsLoaded) dispatch(fetchProductsAsync());
+  }, [dispatch, productsLoaded]);
 
-  if (loading) return <LoadingComponent message="Loading Items to Sell"/>;
+  if (status === 'pendingFetchProducts') return <LoadingComponent message="Loading Items to Sell"/>;
 
   return (
     <>

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useEffect, useState } from "react";
 import { Header } from "./Header";
 import {
@@ -9,27 +12,28 @@ import {
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
-import { useStoreContext } from "../context/StoreContext";
 import { getCookie } from "../../utils/utils";
 import agent from "../../api/agent";
 import { LoadingComponent } from "./LoadingComponent";
+import { useAppDispatch } from "../store/configureStore";
+import { setBasket } from "../../features/basket/basketSlice";
 
 function App(): React.ReactNode {
-  const setBasket = useStoreContext()?.setBasket;
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const buyerId = getCookie('buyerId');
 
     //fetch basket only if cookie exist
-    //as this proves the existendce of basket itself
+    //as this proves the existence of basket itself
     if(buyerId){
       void agent.Basket.basket()
-      .then(basket => setBasket!(basket))
+      .then(basket => dispatch(setBasket(basket)))
       .catch(error => console.log(error))
     }
     setLoading(false)
-  }, [setBasket])
+  }, [dispatch])
 
 
   const [darkMode, setDarkMode] = useState<boolean>(false);

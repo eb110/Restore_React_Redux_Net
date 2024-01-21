@@ -7,14 +7,14 @@ import {
   TableCell,
 } from "@mui/material";
 import { ReactNode } from "react";
-import { useStoreContext } from "../../app/context/StoreContext";
 import { convertPriceToPounds } from "../../utils/utils";
+import { useAppSelector } from "../../app/store/configureStore";
 
 export const BasketSummary = (): ReactNode => {
-
-  const basketTotalValue = useStoreContext()!.basketTotalValue;
-  const subtotal = basketTotalValue();
-  const deliveryFee = subtotal > 10000 ? 0 : 500;
+  const basket = useAppSelector(state => state.basket.basket);
+  const basketTotalValue = basket ? basket.items.reduce((sum, item) => sum += item.quantity * item.price, 0) : 0;
+  const subtotal = basketTotalValue;
+  const deliveryFee = subtotal > 100000 ? 0 : 500;
   const total = subtotal + deliveryFee;
 
   return (

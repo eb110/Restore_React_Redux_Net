@@ -12,7 +12,7 @@ import {
 import { RoutePaths } from "../models/types";
 import { Link, NavLink } from "react-router-dom";
 import { ShoppingCart } from "@mui/icons-material";
-import { useStoreContext } from "../context/StoreContext";
+import { useAppSelector } from "../store/configureStore";
 
 const midLinks: RoutePaths = [
   { title: "catalog", path: "/catalog" },
@@ -39,8 +39,9 @@ interface HeaderProps {
 }
 
 export const Header = ({handleDarkMode, switchState,}: HeaderProps): React.ReactNode => {
-  const itemCount = useStoreContext()!.basketCount;
-
+  const basket = useAppSelector(state => state.basket.basket);
+  const itemCount = basket ? basket.items.reduce((sum, item) => sum += item.quantity, 0) : 0;
+   
   return (
     <>
       <AppBar position="static" sx={{ mb: 4 }}>
@@ -88,7 +89,7 @@ export const Header = ({handleDarkMode, switchState,}: HeaderProps): React.React
               color="inherit"
               sx={{ mr: 2 }}
             >
-              <Badge badgeContent={itemCount()} color="secondary">
+              <Badge badgeContent={itemCount} color="secondary">
                 <ShoppingCart />
               </Badge>
             </IconButton>

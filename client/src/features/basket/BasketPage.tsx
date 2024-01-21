@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Box,
   Button,
@@ -13,44 +16,15 @@ import {
 } from "@mui/material";
 import { convertPriceToPounds } from "../../utils/utils";
 import { Add, Delete, Remove } from "@mui/icons-material";
-import { useStoreContext } from "../../app/context/StoreContext";
-import { LoadingButtonState } from "../../app/models/types";
-import { useState } from "react";
-import agent from "../../api/agent";
 import { LoadingButton } from "@mui/lab";
 import { BasketSummary } from "./BaketSummary";
 import { Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { addBasketItemAsync, removeBasketItemAsync } from "./basketSlice";
 
 export const BasketPage = (): React.ReactNode => {
-  const basket = useStoreContext()!.basket;
-  const setBasket = useStoreContext()!.setBasket;
-  const removeItem = useStoreContext()!.removeItem;
-
-  const [loading, setLoading] = useState<LoadingButtonState>({
-    state: false,
-    id: -1,
-    type: "",
-  });
-
-  const handleAddItem = (productId: number): void => {
-    setLoading({ state: true, id: productId, type: "add" });
-    void agent.Basket.addItem(productId)
-      .then((basket) => setBasket(basket))
-      .catch((error) => console.log(error))
-      .finally(() => setLoading({ state: false, id: -1, type: "" }));
-  };
-
-  const handleRemoveItem = (
-    productId: number,
-    type: string,
-    quantity = 1
-  ): void => {
-    setLoading({ state: true, id: productId, type: type });
-    void agent.Basket.removeItem(productId, quantity)
-      .then(() => removeItem(productId, quantity))
-      .catch((error) => console.log(error))
-      .finally(() => setLoading({ state: false, id: -1, type: "" }));
-  };
+  const {basket, status} = useAppSelector(state => state.basket);
+  const dispatch = useAppDispatch();
 
   if (!basket) return <Typography variant="h3">Empty Basket</Typography>;
 
@@ -88,13 +62,9 @@ export const BasketPage = (): React.ReactNode => {
                 </TableCell>
                 <TableCell align="center">
                   <LoadingButton
-                    loading={
-                      loading.state &&
-                      loading.id === item.productId &&
-                      loading.type === "rem"
-                    }
+                    loading={status === `pendingRemoveItem ${item.productId}rem`}
                     onClick={(): void =>
-                      handleRemoveItem(item.productId, "rem")
+                      dispatch(removeBasketItemAsync({productId: item.productId, quantity: 1, type: 'rem'}))
                     }
                     color="error"
                   >
@@ -102,12 +72,8 @@ export const BasketPage = (): React.ReactNode => {
                   </LoadingButton>
                   {item.quantity}
                   <LoadingButton
-                    loading={
-                      loading.state &&
-                      loading.id === item.productId &&
-                      loading.type === "add"
-                    }
-                    onClick={(): void => handleAddItem(item.productId)}
+                    loading={status === `pendingAddItem ${item.productId}`}
+                    onClick={(): void => dispatch(addBasketItemAsync({productId: item.productId}))}
                     color="secondary"
                   >
                     <Add />
@@ -118,13 +84,9 @@ export const BasketPage = (): React.ReactNode => {
                 </TableCell>
                 <TableCell align="right">
                   <LoadingButton
-                    loading={
-                      loading.state &&
-                      loading.id === item.productId &&
-                      loading.type === "del"
-                    }
+                    loading={status === `pendingRemoveItem ${item.productId}del`}
                     onClick={(): void =>
-                      handleRemoveItem(item.productId, "del", item.quantity)
+                      dispatch(removeBasketItemAsync({productId: item.productId, quantity: item.quantity, type: 'del'}))
                     }
                     color="error"
                   >
