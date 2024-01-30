@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -30,7 +27,7 @@ export const ProductDetails = (): React.ReactNode => {
     setQuantity(item.quantity);
 
     if(!product)
-      dispatch(fetchProductAsync(+id!));
+      void dispatch(fetchProductAsync(+id!));
   }, [dispatch, id, item, product]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>):void => {
@@ -40,9 +37,9 @@ export const ProductDetails = (): React.ReactNode => {
 
   const handleUpdateCart = (): void => {
     if(!item || quantity > item.quantity)
-      dispatch(addBasketItemAsync({productId: product.id, quantity: !item ? quantity : quantity - item.quantity}))
+      void dispatch(addBasketItemAsync({productId: product.id, quantity: !item ? quantity : quantity - item.quantity}))
     else
-      dispatch(removeBasketItemAsync({productId: product.id, quantity: item.quantity - quantity}))
+      void dispatch(removeBasketItemAsync({productId: product.id, quantity: item.quantity - quantity}))
   }
 
   if (catalogProductFetchStatus === 'pendingFetchProduct') return <LoadingComponent message="Loading Item..."/>;

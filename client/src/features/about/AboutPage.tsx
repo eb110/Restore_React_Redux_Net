@@ -11,8 +11,8 @@ export const AboutPage = (): React.ReactNode => {
         </Typography>
         <ButtonGroup fullWidth>
           <Button variant="contained"
-            onClick={():any  =>
-              agent.TestErrors.get400Error().catch((error: AxiosError) =>
+            onClick={():void  =>
+              void agent.TestErrors.get400Error().catch((error: AxiosError) =>
                 console.log(error)
               )
             }
@@ -21,8 +21,8 @@ export const AboutPage = (): React.ReactNode => {
           </Button>
           <Button
             variant="contained"
-            onClick={(): any =>
-              agent.TestErrors.get404Error().catch((error: AxiosError) =>
+            onClick={(): void =>
+              void agent.TestErrors.get404Error().catch((error: AxiosError) =>
                 console.log(error)
               )
             }
@@ -31,8 +31,8 @@ export const AboutPage = (): React.ReactNode => {
           </Button>
           <Button
             variant="contained"
-            onClick={(): any =>
-              agent.TestErrors.get401Error().catch((error: AxiosError) =>
+            onClick={(): void =>
+              void agent.TestErrors.get401Error().catch((error: AxiosError) =>
                 console.log(error)
               )
             }
@@ -41,8 +41,8 @@ export const AboutPage = (): React.ReactNode => {
           </Button>
           <Button
             variant="contained"
-            onClick={(): any =>
-              agent.TestErrors.get500Error().catch((error: AxiosError) =>
+            onClick={(): void =>
+              void agent.TestErrors.get500Error().catch((error: AxiosError) =>
                 console.log(error)
               )
             }
@@ -51,8 +51,8 @@ export const AboutPage = (): React.ReactNode => {
           </Button>
           <Button
             variant="contained"
-            onClick={(): any =>
-              agent.TestErrors.getValidationError().catch((error: AxiosError) =>
+            onClick={(): void =>
+              void agent.TestErrors.getValidationError().catch((error: AxiosError) =>
                 console.log(error)
               )
             }

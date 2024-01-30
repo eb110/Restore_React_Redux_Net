@@ -58,7 +58,7 @@ export const ProductCard = ({ product }: ProductCardProps): React.ReactNode => {
           </Typography>
         </CardContent>
         <CardActions>
-          <LoadingButton loading={status === `pendingAddItem ${product.id}`} size="small" onClick={(): any => dispatch(addBasketItemAsync({productId: product.id}))}>
+          <LoadingButton loading={status === `pendingAddItem ${product.id}`} size="small" onClick={(): void => void dispatch(addBasketItemAsync({productId: product.id}))}>
             Add to cart
           </LoadingButton>
           <Button size="small" component={Link} to={`/catalog/${product.id}`}>

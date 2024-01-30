@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { Basket, Product, Products, errorResponse } from "../app/models/types";
+import { Basket, MetaData, PaginatedResponse, Product, ProductFilters, Products, errorResponse } from "../app/models/types";
 import { toast } from "react-toastify";
 import { router } from "../app/router/Routes";
 
@@ -14,6 +14,12 @@ const sleep = (): Promise<object> =>
 axios.interceptors.response.use(
   async (response) => {
     await sleep();
+    const pagination = response.headers['pagination'] as string;
+    if(pagination){
+      response.data = new PaginatedResponse(response.data, JSON.parse(pagination) as MetaData);
+     // console.log('axios interceptor pagination: ', response);
+      return response;
+    }
     return response;
   },
   (error: AxiosError) => {
@@ -44,8 +50,8 @@ axios.interceptors.response.use(
 );
 
 const requests = {
-  get: <T>(url: string): Promise<object> =>
-    axios.get<T>(url).then(responseBody) as Promise<object>,
+  get: <T>(url: string, params?: URLSearchParams): Promise<object> =>
+    axios.get<T>(url, {params}).then(responseBody) as Promise<object>,
   post: (url: string, body: object): Promise<object> =>
     axios.post(url, body).then(responseBody) as Promise<object>,
   put: (url: string, body: object): Promise<object> =>
@@ -55,9 +61,11 @@ const requests = {
 };
 
 const Catalog = {
-  list: (): Promise<Products> => requests.get("products") as Promise<Products>,
+  list: (params: URLSearchParams): Promise<PaginatedResponse<Product>> => 
+    requests.get("products", params) as Promise<PaginatedResponse<Product>>,
   details: (id: number): Promise<Product> =>
     requests.get(`products/${id}`) as Promise<Product>,
+  filters: (): Promise<ProductFilters> => requests.get("products/filters") as Promise<ProductFilters>,
 };
 
 const TestErrors = {

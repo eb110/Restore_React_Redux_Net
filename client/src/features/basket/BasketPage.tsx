@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Box,
   Button,
@@ -64,7 +61,7 @@ export const BasketPage = (): React.ReactNode => {
                   <LoadingButton
                     loading={status === `pendingRemoveItem ${item.productId}rem`}
                     onClick={(): void =>
-                      dispatch(removeBasketItemAsync({productId: item.productId, quantity: 1, type: 'rem'}))
+                      void dispatch(removeBasketItemAsync({productId: item.productId, quantity: 1, type: 'rem'}))
                     }
                     color="error"
                   >
@@ -73,7 +70,7 @@ export const BasketPage = (): React.ReactNode => {
                   {item.quantity}
                   <LoadingButton
                     loading={status === `pendingAddItem ${item.productId}`}
-                    onClick={(): void => dispatch(addBasketItemAsync({productId: item.productId}))}
+                    onClick={(): void => void dispatch(addBasketItemAsync({productId: item.productId}))}
                     color="secondary"
                   >
                     <Add />
@@ -86,7 +83,7 @@ export const BasketPage = (): React.ReactNode => {
                   <LoadingButton
                     loading={status === `pendingRemoveItem ${item.productId}del`}
                     onClick={(): void =>
-                      dispatch(removeBasketItemAsync({productId: item.productId, quantity: item.quantity, type: 'del'}))
+                      void dispatch(removeBasketItemAsync({productId: item.productId, quantity: item.quantity, type: 'del'}))
                     }
                     color="error"
                   >
